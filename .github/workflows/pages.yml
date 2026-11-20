@@ -5,9 +5,9 @@
 name: Pages
 
 on:
-  # Сборка при каждом пуше в ветку demo
+  # Сборка при каждом пуше в ветку main
   push:
-    branches: [demo]
+    branches: [main]
   # Ручной запуск из вкладки Actions
   workflow_dispatch:
 
