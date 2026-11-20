@@ -1,0 +1,137 @@
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--rso-topbar-h);
+  padding: 10px var(--rso-page-pad);
+  background: color-mix(in srgb, var(--rso-bg) 88%, transparent);
+  border-bottom: 1px solid var(--rso-border);
+  backdrop-filter: blur(8px);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-right: auto;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: title-in 0.45s var(--rso-ease-out);
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--rso-text-muted);
+  animation: title-in 0.45s var(--rso-ease-out);
+}
+
+.metaError {
+  color: var(--rso-neg);
+}
+
+/* Иконка «Обновить» крутится во время загрузки */
+.spin svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes title-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rso-text);
+  text-decoration: none;
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.2s var(--rso-ease-out);
+}
+
+.iconButton:hover:not(:disabled) {
+  border-color: var(--rso-accent);
+  color: var(--rso-accent);
+}
+
+.iconButton:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.iconButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu {
+  display: none;
+}
+
+@media (max-width: 1099px) {
+  .actionText {
+    display: none;
+  }
+
+  .iconButton {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 899px) {
+  .menu {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 519px) {
+  .bar {
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
+
+  .meta {
+    font-size: 12px;
+  }
+
+  .actions {
+    gap: 4px;
+  }
+}

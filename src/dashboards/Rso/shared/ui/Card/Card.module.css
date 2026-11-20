@@ -1,0 +1,81 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius);
+  box-shadow: var(--rso-shadow);
+  transition:
+    border-color 0.35s,
+    box-shadow 0.35s;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--rso-accent) 35%, var(--rso-border));
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px 0;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--rso-text);
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px 20px;
+}
+
+.chart {
+  min-height: 280px;
+}
+
+.table {
+  padding: 12px 0 8px;
+}
+
+@media (max-width: 519px) {
+  .header {
+    padding: 14px 14px 0;
+  }
+
+  .body {
+    padding: 12px 14px 14px;
+  }
+
+  .chart {
+    min-height: 220px;
+  }
+
+  .table {
+    padding: 8px 0 4px;
+  }
+}

@@ -1,0 +1,388 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--rso-backdrop);
+  animation: fade-in 0.26s ease-out;
+}
+
+/* Нижняя выдвижная панель (bottom sheet) */
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  height: 78svh;
+  max-width: 1280px;
+  margin: 0 auto;
+  color: var(--rso-text);
+  background: var(--rso-bg);
+  border: 1px solid var(--rso-border);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  box-shadow: var(--rso-shadow-sheet);
+  animation: sheet-in 0.42s var(--rso-ease-out);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--rso-border);
+}
+
+.heading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 0;
+  font-size: 13px;
+}
+
+.crumbItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+.crumbSep {
+  margin: 0 6px;
+  color: var(--rso-neutral);
+}
+
+.crumb {
+  padding: 2px 4px;
+  font: inherit;
+  color: var(--rso-accent);
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.crumb:hover {
+  background: var(--rso-accent-soft);
+}
+
+.crumbCurrent {
+  padding: 2px 4px;
+  font-weight: 600;
+}
+
+.close {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--rso-text-muted);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.close:hover {
+  color: var(--rso-accent);
+  border-color: var(--rso-accent);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 24px 32px;
+  overflow-y: auto;
+  animation: level-in 0.35s var(--rso-ease-out);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--rso-gap);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0 8px;
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 0 20px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sectionHint {
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+/* Внутри секции состояния блока — с отступами */
+.section > div[role="status"],
+.section > div[role="alert"],
+.section > div[aria-busy="true"] {
+  margin: 0 20px 12px;
+}
+
+.linkButton {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rso-accent);
+  background: transparent;
+  border: 1px solid var(--rso-accent);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.linkButton:hover:not(:disabled) {
+  background: var(--rso-accent-soft);
+}
+
+.linkButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) repeat(3, minmax(140px, 1fr));
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.control {
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--rso-text);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+}
+
+.control:focus-visible {
+  border-color: var(--rso-accent);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--rso-text-muted);
+}
+
+.totalCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Полоса значения в таблицах уровней */
+.barCell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.barTrack {
+  flex: 1;
+  max-width: 220px;
+  height: 6px;
+  overflow: hidden;
+  background: var(--rso-hover);
+  border-radius: 3px;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--rso-accent);
+  border-radius: 3px;
+  transform-origin: left center;
+  animation: bar-grow 0.9s var(--rso-ease-out) 0.15s backwards;
+}
+
+.barValue {
+  min-width: 110px;
+  font-variant-numeric: tabular-nums;
+}
+
+.positive {
+  color: var(--rso-pos);
+}
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.neutral {
+  color: var(--rso-neutral);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes level-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 899px) {
+  .sheet {
+    height: 90svh;
+  }
+
+  .header {
+    padding: 14px 16px 12px;
+  }
+
+  .body {
+    padding: 16px 12px 24px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 14px;
+  }
+
+  .sectionHead {
+    padding: 0 14px;
+  }
+
+  .barTrack {
+    display: none;
+  }
+
+  .barValue {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 519px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.back {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rso-accent);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  animation: fade-in 0.25s ease-out;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.back:hover {
+  border-color: var(--rso-accent);
+  background: var(--rso-accent-soft);
+}
+
+.strong {
+  font-weight: 600;
+}
+
+@media (max-width: 519px) {
+  .backText {
+    display: none;
+  }
+}
+
+/* Пояснение под таблицей */
+.footnote {
+  margin: 0;
+  padding: 0 20px;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+/* Пояснение над данными уровня: срез не найден, показаны все ЗН */
+.notice {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--rso-text);
+  background: var(--rso-accent-soft);
+  border-radius: var(--rso-radius-sm);
+}

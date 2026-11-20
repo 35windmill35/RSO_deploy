@@ -1,0 +1,118 @@
+.wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.table th,
+.table td {
+  transition: background-color 0.2s;
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rso-border);
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-left: 20px;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 20px;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rso-text-muted);
+  background: var(--rso-card);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tfoot td {
+  font-weight: 600;
+  border-top: 1px solid var(--rso-border);
+  border-bottom: none;
+}
+
+.right {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.grow {
+  width: 100%;
+  white-space: normal !important;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover td {
+  background: var(--rso-hover);
+}
+
+.empty {
+  padding: 32px 20px !important;
+  text-align: center !important;
+  color: var(--rso-text-muted);
+}
+
+@media (max-width: 519px) {
+  .table {
+    font-size: 12.5px;
+  }
+
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: 14px;
+  }
+
+  .table th:last-child,
+  .table td:last-child {
+    padding-right: 14px;
+  }
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.sortButton:hover,
+.sortActive {
+  color: var(--rso-text);
+}
+
+.sortIcon {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.sortActive .sortIcon {
+  color: var(--rso-accent);
+  opacity: 1;
+}

@@ -1,0 +1,207 @@
+/* container-type — размер числа подстраивается под ширину карточки */
+.card {
+  position: relative;
+  container-type: inline-size;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-end) 100%);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.35s,
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s;
+  animation: card-in 0.75s var(--ease-out) backwards;
+}
+
+.card:nth-child(2) {
+  animation-delay: 45ms;
+}
+.card:nth-child(3) {
+  animation-delay: 90ms;
+}
+.card:nth-child(4) {
+  animation-delay: 135ms;
+}
+.card:nth-child(5) {
+  animation-delay: 180ms;
+}
+.card:nth-child(6) {
+  animation-delay: 225ms;
+}
+.card:nth-child(7) {
+  animation-delay: 270ms;
+}
+.card:nth-child(8) {
+  animation-delay: 315ms;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.card:has(.mainButton:hover),
+.card:has(.mainButton:focus-visible),
+.card:has(.mainClickable:hover) {
+  border-color: var(--color-accent-line);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 18px 18px 16px;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.mainButton,
+.mainClickable {
+  cursor: pointer;
+}
+
+.mainButton:focus-visible {
+  outline: none;
+}
+
+.card:has(.mainButton:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+  /* Высота в две строки — числа соседних карточек на одной линии */
+  padding-right: 36px;
+  min-height: 32px;
+}
+
+.valueLine {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  min-width: 0;
+}
+
+.value {
+  font-size: clamp(20px, 13cqi, 30px);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-title);
+  white-space: nowrap;
+}
+
+.unit {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.deltaLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: 16px;
+}
+
+.delta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
+}
+
+.deltaUp {
+  color: var(--color-positive);
+}
+
+.deltaDown {
+  color: var(--color-negative);
+}
+
+.listButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background: var(--color-soft);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.listButton:hover {
+  color: var(--color-accent-hi);
+  border-color: var(--color-accent-line);
+  background: var(--color-accent-soft);
+}
+
+.listButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.compact .main {
+  gap: 10px;
+  padding: 14px 14px 12px;
+}
+
+.compact .label {
+  font-size: 11.5px;
+  line-height: 15px;
+  padding-right: 30px;
+  min-height: 45px;
+}
+
+.compact .value {
+  font-size: clamp(15px, 11.5cqi, 24px);
+}
+
+.compact .unit {
+  font-size: 12px;
+}
+
+.compact .deltaLine {
+  align-items: flex-start;
+}
+
+.compact .delta {
+  white-space: normal;
+}
+
+.compact .listButton {
+  top: 12px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+}

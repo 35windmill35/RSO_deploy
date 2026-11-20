@@ -1,0 +1,12 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5);
+}
+
+.progress {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,19 @@
+.ts_page_404 {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts_404_title {
+  font-size: 60px;
+}
+
+.ts_link_404 {
+  font-size: 24px;
+  margin: 20px;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

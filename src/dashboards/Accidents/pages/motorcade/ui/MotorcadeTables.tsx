@@ -1,0 +1,158 @@
+import { DataTable, type DataTableColumn } from "@Accidents/widgets/data-table/DataTable";
+import { drilldownStore } from "@Accidents/widgets/accident-drilldown/model/drilldownStore";
+import { formatCurrency, formatNumber } from "@Accidents/shared/lib/formatters";
+import { formatPeriodLabel, type Period } from "@Accidents/entities/accident/lib/period";
+import type {
+  DriverAggregate,
+  RouteAggregate,
+  VehicleAggregate,
+  BreakdownSlice,
+} from "@Accidents/entities/accident/lib/metrics";
+import type { MotorcadeData } from "../model/motorcadeData";
+import styles from "./MotorcadeTables.module.css";
+import { useTranslation } from "react-i18next";
+import i18n from "@/APP/i18n";
+
+interface MotorcadeTablesProps {
+  data: MotorcadeData;
+  period: Period;
+}
+
+const driverColumns: DataTableColumn<DriverAggregate>[] = [
+  {
+    key: "name",
+    label: i18n.t("roadAccidents.common.driver"),
+    grow: true,
+    render: (r) => r.name,
+    title: (r) => r.name,
+  },
+  {
+    key: "count",
+    label: i18n.t("roadAccidents.common.accidents"),
+    align: "right",
+    render: (r) => formatNumber(r.count),
+  },
+  {
+    key: "sumDamage",
+    label: i18n.t("roadAccidents.common.damage"),
+    align: "right",
+    render: (r) => formatCurrency(r.sumDamage),
+  },
+];
+
+const vehicleColumns: DataTableColumn<VehicleAggregate>[] = [
+  {
+    key: "name",
+    label: i18n.t("roadAccidents.common.vehicle"),
+    grow: true,
+    render: (r) => r.name,
+    title: (r) => r.name,
+  },
+  {
+    key: "count",
+    label: i18n.t("roadAccidents.common.accidents"),
+    align: "right",
+    render: (r) => formatNumber(r.count),
+  },
+  {
+    key: "sumDamage",
+    label: i18n.t("roadAccidents.common.damage"),
+    align: "right",
+    render: (r) => formatCurrency(r.sumDamage),
+  },
+];
+
+const routeColumns: DataTableColumn<RouteAggregate>[] = [
+  {
+    key: "name",
+    label: i18n.t("roadAccidents.common.route"),
+    grow: true,
+    render: (r) => r.name,
+    title: (r) => r.name,
+  },
+  {
+    key: "count",
+    label: i18n.t("roadAccidents.common.accidents"),
+    align: "right",
+    render: (r) => formatNumber(r.count),
+  },
+  {
+    key: "sumDamage",
+    label: i18n.t("roadAccidents.common.damage"),
+    align: "right",
+    render: (r) => formatCurrency(r.sumDamage),
+  },
+];
+
+const causeColumns: DataTableColumn<BreakdownSlice>[] = [
+  {
+    key: "label",
+    label: i18n.t("roadAccidents.common.cause"),
+    grow: true,
+    wrap: true,
+    render: (r) => r.label,
+  },
+  {
+    key: "count",
+    label: i18n.t("roadAccidents.common.accidents"),
+    align: "right",
+    render: (r) => formatNumber(r.count),
+  },
+  {
+    key: "sumDamage",
+    label: i18n.t("roadAccidents.common.damage"),
+    align: "right",
+    render: (r) => formatCurrency(r.sumDamage),
+  },
+  {
+    key: "sumCompensated",
+    label: i18n.t("roadAccidents.common.compensation"),
+    align: "right",
+    render: (r) => formatCurrency(r.sumCompensated),
+  },
+];
+
+export function MotorcadeTables({ data, period }: MotorcadeTablesProps) {
+  const { t } = useTranslation();
+  const periodLabel = formatPeriodLabel(period);
+
+  return (
+    <div className={styles.grid}>
+      <DataTable
+        title={t("roadAccidents.table.topDrivers", { count: 8 })}
+        columns={driverColumns}
+        rows={data.driversRanking}
+        getRowKey={(r) => r.key}
+        showRank
+        onRowClick={(r) => drilldownStore.open(`${r.name} — ${periodLabel}`, r.rows)}
+      />
+      <DataTable
+        title={t("roadAccidents.table.topVehicles", { count: 8 })}
+        columns={vehicleColumns}
+        rows={data.vehiclesRanking}
+        getRowKey={(r) => r.key}
+        showRank
+        onRowClick={(r) => drilldownStore.open(`${r.name} — ${periodLabel}`, r.rows)}
+      />
+      <DataTable
+        title={t("roadAccidents.table.topRoutes", { count: 8 })}
+        columns={routeColumns}
+        rows={data.routesRanking}
+        emptyText={t("roadAccidents.table.noRoutes")}
+        getRowKey={(r) => r.key}
+        showRank
+        onRowClick={(r) => drilldownStore.open(`${r.name} — ${periodLabel}`, r.rows)}
+      />
+      {/*<div className={styles.fullRow}>
+        <DataTable
+          title={t("roadAccidents.chart.damageByCause")}
+          columns={causeColumns}
+          rows={data.causeSlices}
+          getRowKey={(r) => r.key}
+          initialLimit={5}
+          onRowClick={(r) => drilldownStore.open(`${r.label} — ${periodLabel}`, r.rows)}
+        />
+      </div>*/}
+    </div>
+  );
+}

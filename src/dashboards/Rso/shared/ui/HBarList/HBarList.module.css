@@ -1,0 +1,90 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(96px, 34%) minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 13px;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--rso-radius-sm);
+}
+
+.button {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background: var(--rso-hover);
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--rso-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.track {
+  height: 8px;
+  overflow: hidden;
+  background: var(--rso-hover);
+  border-radius: 4px;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--rso-accent);
+  border-radius: 4px;
+  transform-origin: left center;
+  animation: bar-grow 0.9s var(--rso-ease-out) 0.15s backwards;
+}
+
+.negative {
+  background: var(--rso-neg);
+}
+
+.caption {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 519px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 4px;
+  }
+
+  .track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none;
+  }
+}

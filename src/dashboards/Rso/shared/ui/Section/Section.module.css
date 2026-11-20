@@ -1,0 +1,53 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Задержка появления блоков раздела: следующие разделы — чуть позже */
+  --rso-stagger-base: 0.2s;
+}
+
+.section:nth-of-type(2) {
+  --rso-stagger-base: 0.3s;
+}
+
+.section:nth-of-type(n + 3) {
+  --rso-stagger-base: 0.4s;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rso-text-muted);
+  animation: divider-in var(--rso-enter) var(--rso-ease-out) backwards;
+  animation-delay: calc(var(--rso-stagger-base) - 0.05s);
+}
+
+/* Линия-разделитель «вырастает» слева направо */
+.title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rso-border);
+  transform-origin: left center;
+  animation: line-grow 0.9s var(--rso-ease-out) backwards;
+  animation-delay: var(--rso-stagger-base);
+}
+
+@keyframes divider-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes line-grow {
+  from {
+    transform: scaleX(0);
+  }
+}

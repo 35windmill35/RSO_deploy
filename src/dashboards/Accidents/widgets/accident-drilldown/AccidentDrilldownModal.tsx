@@ -1,0 +1,494 @@
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { drilldownStore } from "./model/drilldownStore";
+import type { AccidentRow } from "@Accidents/entities/accident/model/types";
+import { getMotorcadeName } from "@Accidents/entities/accident/lib/motorcade";
+import { displayName } from "@Accidents/shared/config/accidentCauses";
+import { formatCurrency, formatDate, formatTime } from "@Accidents/shared/lib/formatters";
+import { downloadCsv } from "@Accidents/shared/lib/csvExport";
+import { SortHeader, type SortDir, type SortKey } from "./SortHeader";
+import styles from "./AccidentDrilldownModal.module.css";
+import i18n from "@/APP/i18n";
+import { useTranslation } from "react-i18next";
+import { accidentsStore } from "@Accidents/entities/accident/model/accidentsStore";
+import store from "@/APP/store/root";
+
+const PAGE_SIZE = 50;
+const VIRTUALIZE_THRESHOLD = 200;
+
+function rowKey(row: AccidentRow): string {
+  return `${row.DB_INDEX}:${row.ACCIDENT_ID}`;
+}
+
+function dateTimeLabel(row: AccidentRow): string {
+  const time = formatTime(row.ACCIDENT_TIME);
+  return time === "—" ? formatDate(row.ACCIDENT_DATE) : `${formatDate(row.ACCIDENT_DATE)} ${time}`;
+}
+
+// Пустые во всём списке колонки скрываются (на экране и в CSV)
+const OPTIONAL_COLUMNS = [
+  {
+    key: "route",
+    label: i18n.t("roadAccidents.common.route"),
+    value: (row: AccidentRow) => row.ROUTE_NAME,
+  },
+  {
+    key: "address",
+    label: i18n.t("roadAccidents.common.address"),
+    value: (row: AccidentRow) => row.ACCIDENT_ADDRESS,
+  },
+  {
+    key: "insurance",
+    label: i18n.t("roadAccidents.common.insurance"),
+    value: (row: AccidentRow) => row.INSURANCE_COMPANY_NAME,
+  },
+  {
+    key: "victim",
+    label: i18n.t("roadAccidents.common.victims"),
+    value: (row: AccidentRow) => row.ACCIDENT_VICTIM,
+  },
+] as const;
+
+type OptionalColumnKey = (typeof OPTIONAL_COLUMNS)[number]["key"];
+
+function vehicleLabel(row: AccidentRow): string {
+  const parts = [row.GARAGE_NUM ? `№${row.GARAGE_NUM}` : null, row.CAR_MAKE_MODEL].filter(Boolean);
+  return parts.join(", ") || "—";
+}
+
+function sortValue(row: AccidentRow, key: SortKey): number | string {
+  switch (key) {
+    case "id":
+      return row.ACCIDENT_ID;
+    case "date":
+      return row.ACCIDENT_DATE || "";
+    case "motorcade":
+      return getMotorcadeName(row);
+    case "vehicle":
+      return vehicleLabel(row);
+    case "driver":
+      return row.DRIVER_NAME || "";
+    case "damage":
+      return row.ACCIDENT_DAMAGE ?? 0;
+    case "compensated":
+      return row.ACCIDENT_COMPENSATED_DAMAGE ?? 0;
+  }
+}
+
+export const AccidentDrilldownModal = observer(function AccidentDrilldownModal() {
+  const { t } = useTranslation();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("date");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [page, setPage] = useState(0);
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
+  // Фокус возвращается на элемент, открывший модалку
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+
+  const showBaseColumn = (accidentsStore.allowedDbIndexes?.length ?? 0) > 1;
+  const isOpen = drilldownStore.isOpen;
+  const title = drilldownStore.title;
+  const rows = drilldownStore.rows;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSearch("");
+    setSortKey("date");
+    setSortDir("desc");
+    setPage(0);
+    setExpandedKey(null);
+  }, [isOpen, title]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        drilldownStore.close();
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    returnFocusRef.current = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    document.addEventListener("keydown", handleKeyDown);
+    dialogRef.current?.querySelector<HTMLElement>("button")?.focus();
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      const target = returnFocusRef.current;
+      if (target && document.contains(target)) target.focus();
+    };
+  }, [isOpen]);
+
+  const visibleOptional = useMemo(() => {
+    const visible = new Set<OptionalColumnKey>();
+    OPTIONAL_COLUMNS.forEach((column) => {
+      if (rows.some((row) => Boolean(column.value(row)))) visible.add(column.key);
+    });
+    return visible;
+  }, [rows]);
+
+  const filteredSorted = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    let filtered = rows;
+
+    if (query) {
+      filtered = filtered.filter((row) => {
+        const haystack =
+          `${row.ACCIDENT_ID} ${row.DRIVER_NAME || ""} ${row.GARAGE_NUM || ""} ${row.ACCIDENT_ADDRESS || ""}`.toLowerCase();
+        return haystack.includes(query);
+      });
+    }
+
+    const sorted = [...filtered].sort((a, b) => {
+      const va = sortValue(a, sortKey);
+      const vb = sortValue(b, sortKey);
+      const cmp =
+        typeof va === "number" && typeof vb === "number"
+          ? va - vb
+          : String(va).localeCompare(String(vb), "ru");
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+
+    return sorted;
+  }, [rows, search, sortKey, sortDir]);
+
+  // Без активной сессии список с ПДн не рисуем
+  if (!isOpen || !store.auth.isAuthenticated) return null;
+
+  const totalPages = Math.max(1, Math.ceil(filteredSorted.length / PAGE_SIZE));
+  const pageRows =
+    filteredSorted.length > VIRTUALIZE_THRESHOLD
+      ? filteredSorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+      : filteredSorted;
+
+  const toggleSort = (key: SortKey) => {
+    if (key === sortKey) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+    setPage(0);
+  };
+
+  const sortProps = { sortKey, sortDir, onSort: toggleSort };
+
+  const handleExport = () => {
+    const optional = OPTIONAL_COLUMNS.filter((column) => visibleOptional.has(column.key));
+    const headers = [
+      t("roadAccidents.common.accidentNumber"),
+      t("roadAccidents.common.date"),
+      t("roadAccidents.common.time"),
+      t("roadAccidents.common.motorcade"),
+      t("roadAccidents.common.vehicle"),
+      t("roadAccidents.common.driver"),
+      ...optional.map((column) => column.label),
+      t("roadAccidents.common.cause"),
+      t("roadAccidents.common.causer"),
+      t("roadAccidents.common.damage"),
+      t("roadAccidents.common.compensation"),
+      t("roadAccidents.common.status"),
+      ...(showBaseColumn ? [t("roadAccidents.common.base")] : []),
+    ];
+
+    const csvRows = filteredSorted.map((row) => {
+      const time = formatTime(row.ACCIDENT_TIME);
+      return [
+        String(row.ACCIDENT_ID),
+        formatDate(row.ACCIDENT_DATE),
+        time === "—" ? "" : time,
+        getMotorcadeName(row),
+        vehicleLabel(row),
+        row.DRIVER_NAME || "",
+        ...optional.map((column) => column.value(row) || ""),
+        row.ACCIDENT_CAUSE_NAME || "",
+        row.ACCIDENT_CAUSER_NAME || "",
+        String(row.ACCIDENT_DAMAGE ?? 0),
+        String(row.ACCIDENT_COMPENSATED_DAMAGE ?? 0),
+        row.ACCIDENT_STATUS_NAME || "",
+        ...(showBaseColumn ? [store.auth.getFirmName(row.DB_INDEX)] : []),
+      ];
+    });
+
+    const stamp = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fileStamp = `${stamp.getFullYear()}${pad(stamp.getMonth() + 1)}${pad(stamp.getDate())}-${pad(stamp.getHours())}${pad(stamp.getMinutes())}`;
+    downloadCsv(`dtp-spisok-${fileStamp}.csv`, headers, csvRows);
+  };
+
+  // Кнопка раскрытия + 10 постоянных + необязательные + база
+  const totalColumns = 1 + 10 + visibleOptional.size + (showBaseColumn ? 1 : 0);
+
+  return (
+    <div className={styles.backdrop} onClick={() => drilldownStore.close()}>
+      <div
+        ref={dialogRef}
+        className={styles.dialog}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.header}>
+          <div className={styles.titles}>
+            <span className={styles.eyebrow}>{t("roadAccidents.drilldown.eyebrow")}</span>
+            <h2 className={styles.title}>{title}</h2>
+            <p className={styles.subtitle}>
+              {t("roadAccidents.drilldown.found", { count: filteredSorted.length })}
+            </p>
+          </div>
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={() => drilldownStore.close()}
+            aria-label={t("close")}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12" />
+              <path d="M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <div className={styles.toolbar}>
+          <div className={styles.searchWrap}>
+            <svg
+              className={styles.searchIcon}
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              className={styles.search}
+              type="search"
+              aria-label={t("roadAccidents.drilldown.searchLabel")}
+              placeholder={t("roadAccidents.drilldown.searchPlaceholder")}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
+            />
+          </div>
+          <button type="button" className={styles.exportButton} onClick={handleExport}>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 4v11" />
+              <path d="m7.5 10.5 4.5 4.5 4.5-4.5" />
+              <path d="M5 20h14" />
+            </svg>
+            {t("roadAccidents.drilldown.exportCsv")}
+          </button>
+        </div>
+
+        {filteredSorted.length === 0 ? (
+          <div className={styles.empty}>{t("roadAccidents.drilldown.nothingFound")}</div>
+        ) : (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th scope="col" aria-label={t("roadAccidents.drilldown.details")} />
+                  <SortHeader
+                    label={t("roadAccidents.common.accidentNumberShort")}
+                    column="id"
+                    {...sortProps}
+                  />
+                  <SortHeader
+                    label={t("roadAccidents.common.dateTime")}
+                    column="date"
+                    {...sortProps}
+                  />
+                  <SortHeader
+                    label={t("roadAccidents.common.motorcade")}
+                    column="motorcade"
+                    {...sortProps}
+                  />
+                  <SortHeader
+                    label={t("roadAccidents.common.vehicle")}
+                    column="vehicle"
+                    {...sortProps}
+                  />
+                  <SortHeader
+                    label={t("roadAccidents.common.driver")}
+                    column="driver"
+                    {...sortProps}
+                  />
+                  {visibleOptional.has("route") && (
+                    <th scope="col">{t("roadAccidents.common.route")}</th>
+                  )}
+                  {visibleOptional.has("address") && (
+                    <th scope="col">{t("roadAccidents.common.address")}</th>
+                  )}
+                  <th scope="col">{t("roadAccidents.common.cause")}</th>
+                  <th scope="col">{t("roadAccidents.common.causer")}</th>
+                  <SortHeader
+                    label={t("roadAccidents.common.damage")}
+                    column="damage"
+                    align="right"
+                    {...sortProps}
+                  />
+                  <SortHeader
+                    label={t("roadAccidents.common.compensation")}
+                    column="compensated"
+                    align="right"
+                    {...sortProps}
+                  />
+                  <th scope="col">{t("roadAccidents.common.status")}</th>
+                  {visibleOptional.has("insurance") && (
+                    <th scope="col">{t("roadAccidents.common.insurance")}</th>
+                  )}
+                  {visibleOptional.has("victim") && (
+                    <th scope="col">{t("roadAccidents.common.victims")}</th>
+                  )}
+                  {showBaseColumn && <th scope="col">{t("roadAccidents.common.base")}</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {pageRows.map((row) => {
+                  const key = rowKey(row);
+                  const isExpanded = expandedKey === key;
+                  const hasDetails = Boolean(row.ACCIDENT_DETAILS || row.ACCIDENT_COMMENT);
+                  return (
+                    <Fragment key={key}>
+                      <tr className={isExpanded ? styles.rowExpanded : undefined}>
+                        <td>
+                          {hasDetails && (
+                            <button
+                              type="button"
+                              className={styles.expandButton}
+                              onClick={() => setExpandedKey(isExpanded ? null : key)}
+                              aria-label={
+                                isExpanded
+                                  ? t("roadAccidents.drilldown.hideDetails")
+                                  : t("roadAccidents.drilldown.showDetails")
+                              }
+                              aria-expanded={isExpanded}
+                            >
+                              {isExpanded ? "−" : "+"}
+                            </button>
+                          )}
+                        </td>
+                        <td className={styles.number}>{row.ACCIDENT_ID}</td>
+                        <td className={styles.muted}>{dateTimeLabel(row)}</td>
+                        <td>{getMotorcadeName(row)}</td>
+                        <td>{vehicleLabel(row)}</td>
+                        <td>{row.DRIVER_NAME || "—"}</td>
+                        {visibleOptional.has("route") && (
+                          <td className={styles.muted}>{row.ROUTE_NAME || "—"}</td>
+                        )}
+                        {visibleOptional.has("address") && (
+                          <td
+                            className={`${styles.muted} ${styles.address}`}
+                            title={row.ACCIDENT_ADDRESS || undefined}
+                          >
+                            {row.ACCIDENT_ADDRESS || "—"}
+                          </td>
+                        )}
+                        <td>{row.ACCIDENT_CAUSE_NAME || "—"}</td>
+                        <td>
+                          {row.ACCIDENT_CAUSER_NAME ? displayName(row.ACCIDENT_CAUSER_NAME) : "—"}
+                        </td>
+                        <td className={styles.right}>{formatCurrency(row.ACCIDENT_DAMAGE)}</td>
+                        <td className={`${styles.right} ${styles.muted}`}>
+                          {formatCurrency(row.ACCIDENT_COMPENSATED_DAMAGE)}
+                        </td>
+                        <td>
+                          {row.ACCIDENT_STATUS_NAME ? (
+                            <span
+                              className={`${styles.status} ${row.ACCIDENT_IS_CASE_CLOSED ? "" : styles.statusOpen}`}
+                            >
+                              {row.ACCIDENT_STATUS_NAME}
+                            </span>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                        {visibleOptional.has("insurance") && (
+                          <td>{row.INSURANCE_COMPANY_NAME || "—"}</td>
+                        )}
+                        {visibleOptional.has("victim") && <td>{row.ACCIDENT_VICTIM || "—"}</td>}
+                        {showBaseColumn && <td>{store.auth.getFirmName(row.DB_INDEX)}</td>}
+                      </tr>
+                      {isExpanded && (
+                        <tr className={styles.detailsRow}>
+                          <td />
+                          <td colSpan={totalColumns - 1}>
+                            {row.ACCIDENT_DETAILS && <p>{row.ACCIDENT_DETAILS}</p>}
+                            {row.ACCIDENT_COMMENT && <p>{row.ACCIDENT_COMMENT}</p>}
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {filteredSorted.length > VIRTUALIZE_THRESHOLD && (
+          <div className={styles.pagination}>
+            <button type="button" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+              {t("roadAccidents.common.back")}
+            </button>
+            <span>{t("roadAccidents.common.pageOf", { page: page + 1, total: totalPages })}</span>
+            <button
+              type="button"
+              disabled={page >= totalPages - 1}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              {t("roadAccidents.common.forward")}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});

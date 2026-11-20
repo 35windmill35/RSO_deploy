@@ -1,0 +1,166 @@
+/*
+ * Токены дашборда RSO. Палитра — §9 ТЗ заказчика (светлая тема).
+ * Всё под классом .rso: CSS дашбордов глобальный и остаётся в документе
+ * после перехода в другой дашборд, поэтому в :root ничего не пишем.
+ */
+
+.rso {
+  /* Палитра заказчика */
+  --rso-accent: #2563eb;
+  --rso-accent-soft: rgba(37, 99, 235, 0.1);
+  --rso-accent-2: #f97316;
+  --rso-accent-2-soft: rgba(249, 115, 22, 0.12);
+  --rso-text: #0f172a;
+  --rso-text-muted: #64748b;
+  --rso-border: #e5e7eb;
+  --rso-bg: #f8fafc;
+  --rso-card: #ffffff;
+  --rso-pos: #16a34a;
+  --rso-neg: #dc2626;
+  --rso-neutral: #94a3b8;
+
+  /* Дополнительные ряды графиков: третий и далее отделы */
+  --rso-chart-3: #0ea5e9;
+  --rso-chart-4: #8b5cf6;
+  --rso-chart-5: #14b8a6;
+
+  /* Подписи внутри заливок рядов: контраст не ниже 4,5:1 в обеих темах */
+  --rso-on-chart-1: #ffffff;
+  --rso-on-chart-2: #0f172a;
+  --rso-on-neutral: #0f172a;
+
+  /* Сайдбар — тёмный нави, отличает навигацию от контента */
+  --rso-sidebar: #0b1220;
+  --rso-sidebar-border: rgba(255, 255, 255, 0.08);
+  --rso-sidebar-text: #cbd5e1;
+  --rso-sidebar-text-muted: #64748b;
+  --rso-sidebar-active: rgba(37, 99, 235, 0.22);
+  --rso-sidebar-control: rgba(255, 255, 255, 0.06);
+  --rso-sidebar-control-border: rgba(255, 255, 255, 0.2);
+  --rso-sidebar-title: #ffffff;
+
+  /* Текст на акцентной заливке и наведение на неё */
+  --rso-on-accent: #ffffff;
+  --rso-accent-hover: color-mix(in srgb, var(--rso-accent) 88%, #000000);
+
+  /* Предупреждение: бейдж «Не оформлен». Текст к подложке — не ниже 4,5:1 */
+  --rso-warning: #92400e;
+  --rso-warning-soft: #fef3c7;
+
+  /* Пункты нативного select рисует ОС — задаём читаемые цвета */
+  --rso-select-bg: #ffffff;
+  --rso-select-text: #0f172a;
+
+  /* Служебные */
+  --rso-hover: #f1f5f9;
+  --rso-skeleton: #eef2f7;
+  --rso-skeleton-shine: #f8fafc;
+  --rso-backdrop: rgba(15, 23, 42, 0.45);
+  --rso-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --rso-focus: 0 0 0 3px rgba(37, 99, 235, 0.35);
+  --rso-shadow-sheet: 0 -12px 40px rgba(15, 23, 42, 0.2);
+  --rso-shadow-drawer: 8px 0 24px rgba(0, 0, 0, 0.25);
+  --rso-shadow-thumb: 0 1px 3px rgba(0, 0, 0, 0.25);
+
+  /* Размеры каркаса (§8.2) */
+  --rso-sidebar-w: 260px;
+  --rso-topbar-h: 64px;
+  --rso-bottomnav-h: 64px;
+  --rso-radius: 12px;
+  --rso-radius-sm: 8px;
+  --rso-gap: 16px;
+  --rso-page-pad: 24px;
+
+  /* Движение — те же кривые, что в дашборде ДТП */
+  --rso-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --rso-ease-slide: cubic-bezier(0.3, 0.9, 0.3, 1);
+  --rso-enter: 0.75s;
+  --rso-shadow-lift: 0 6px 18px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(15, 23, 42, 0.06);
+
+  /* Шрифт — системный стек из ТЗ заказчика */
+  --rso-font: "Segoe UI", Inter, Arial, system-ui, sans-serif;
+
+  min-height: 100svh;
+  font-family: var(--rso-font);
+  color: var(--rso-text);
+  background: var(--rso-bg);
+  color-scheme: light;
+}
+
+/* Тёмная тема — производная от тех же ролей; включается ThemeStore по системе */
+[data-theme="dark"] .rso {
+  --rso-accent: #3b82f6;
+  --rso-accent-soft: rgba(59, 130, 246, 0.16);
+  --rso-accent-2: #fb923c;
+  --rso-accent-2-soft: rgba(251, 146, 60, 0.16);
+  --rso-text: #e5e7eb;
+  --rso-text-muted: #94a3b8;
+  --rso-border: #1f2937;
+  --rso-bg: #0b1220;
+  --rso-card: #111827;
+  --rso-pos: #22c55e;
+  --rso-neg: #ef4444;
+  --rso-neutral: #64748b;
+  --rso-chart-3: #38bdf8;
+  --rso-chart-4: #a78bfa;
+  --rso-chart-5: #2dd4bf;
+  --rso-on-chart-1: #0f172a;
+  --rso-on-neutral: #ffffff;
+
+  --rso-sidebar: #070c16;
+  --rso-hover: #1a2333;
+  --rso-skeleton: #1f2937;
+  --rso-skeleton-shine: #273244;
+  --rso-backdrop: rgba(0, 0, 0, 0.6);
+  --rso-shadow: none;
+  --rso-shadow-lift: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --rso-shadow-sheet: 0 -12px 40px rgba(0, 0, 0, 0.5);
+  --rso-warning: #fcd34d;
+  --rso-warning-soft: #422006;
+  --rso-select-bg: #111827;
+  --rso-select-text: #e5e7eb;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 899px) {
+  .rso {
+    --rso-page-pad: 16px;
+    --rso-gap: 12px;
+  }
+}
+
+@media (max-width: 519px) {
+  .rso {
+    --rso-page-pad: 12px;
+    --rso-gap: 10px;
+    font-size: 14px;
+  }
+}
+
+/*
+ * Recharts 3 делает график фокусируемым (accessibilityLayer): после клика браузер
+ * обводит рамкой сектор, точку или весь svg. Рамку убираем — выбранный элемент
+ * и так виден по подсказке.
+ */
+.rso .recharts-wrapper,
+.rso .recharts-wrapper :focus,
+.rso .recharts-wrapper:focus,
+.rso .recharts-surface:focus {
+  outline: none;
+}
+
+.rso :focus-visible {
+  outline: none;
+  box-shadow: var(--rso-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rso *,
+  .rso *::before,
+  .rso *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,145 @@
+/* Таблицы ФОТ: общие для вкладки «Персонал и финансы» и панели детализации */
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--rso-warning);
+  white-space: nowrap;
+  background: var(--rso-warning-soft);
+  border-radius: 999px;
+}
+
+/* Сотрудник без начислений — серым */
+.muted {
+  color: var(--rso-text-muted);
+}
+
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.positive {
+  color: var(--rso-pos);
+}
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.neutral {
+  color: var(--rso-neutral);
+}
+
+.hintText {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.4fr) repeat(2, minmax(140px, 1fr)) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 8px;
+}
+
+.control {
+  min-width: 0;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--rso-text);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+}
+
+.control:focus-visible {
+  border-color: var(--rso-accent);
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--rso-text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.footnote {
+  margin: 0;
+  padding: 8px 20px 0;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+@media (max-width: 899px) {
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 14px 8px;
+  }
+}
+
+@media (max-width: 519px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 20px 0;
+  font-size: 13px;
+  color: var(--rso-text-muted);
+}
+
+.pagerButton {
+  padding: 4px 10px;
+  font: inherit;
+  color: var(--rso-accent);
+  background: none;
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+}
+
+.pagerButton:disabled {
+  color: var(--rso-text-muted);
+  cursor: default;
+}
+
+/* Карточка сотрудника: должность, отдел, статус */
+.card {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0 20px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 2fr;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--rso-border);
+}
+
+.cardRow dt {
+  color: var(--rso-text-muted);
+}
+
+.cardRow dd {
+  margin: 0;
+  color: var(--rso-text);
+}

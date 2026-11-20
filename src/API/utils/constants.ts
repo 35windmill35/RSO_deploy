@@ -1,0 +1,10 @@
+export const RELATIONS = "_relations";
+export const SUBSCRIPTION = "subscription";
+export const WITH_OBJECTS = "WithObjects";
+export const FIELDS = "Fields";
+export const FILTER_STRING = "FilterString";
+export const FILTER_PARAM = "FilterParam";
+export const SESSION_ID = "SESSIONID";
+export const OFFSET = "Offset";
+export const TOTAL = "Total";
+export const WITH_TEVENT_SESSION = "WithTEventSession";

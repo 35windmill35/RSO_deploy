@@ -1,0 +1,56 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 140px;
+  padding: 16px;
+  text-align: center;
+  border: 1px dashed var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  animation: state-in 0.5s ease-out backwards;
+}
+
+@keyframes state-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.message {
+  font-size: 13.5px;
+  color: var(--rso-text-muted);
+}
+
+.error {
+  border-color: var(--rso-neg);
+}
+
+.error .message {
+  color: var(--rso-neg);
+}
+
+.retry {
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rso-accent);
+  background: transparent;
+  border: 1px solid var(--rso-accent);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry:hover {
+  background: var(--rso-accent-soft);
+}

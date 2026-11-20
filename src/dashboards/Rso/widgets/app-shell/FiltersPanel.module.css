@@ -1,0 +1,48 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--rso-sidebar-text-muted);
+}
+
+.select {
+  width: 100%;
+  padding: 8px 32px 8px 10px;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--rso-sidebar-title);
+  background-color: var(--rso-sidebar-control);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  border: 1px solid var(--rso-sidebar-border);
+  border-radius: var(--rso-radius-sm);
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:hover {
+  border-color: var(--rso-sidebar-control-border);
+}
+
+/* Выпадающий список рисует ОС — задаём читаемые цвета пунктов */
+.select option {
+  color: var(--rso-select-text);
+  background: var(--rso-select-bg);
+}
+
+.select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

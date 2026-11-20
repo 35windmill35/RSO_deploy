@@ -1,0 +1,47 @@
+/* Таблицы склада: общие для вкладки «Продажи» и панели детализации */
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.subValue {
+  margin-left: 4px;
+  font-size: 12px;
+  color: var(--rso-text-muted);
+}
+
+/* Ячейки итоговой строки таблицы */
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 0 20px 8px;
+  font-size: 13px;
+}
+
+.search {
+  flex: 1;
+  min-width: 160px;
+  max-width: 320px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--rso-text);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--rso-text-muted);
+  cursor: pointer;
+}

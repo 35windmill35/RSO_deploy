@@ -1,0 +1,395 @@
+/* Общие стили блоков «Обзора» */
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 300px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.swatchPrimary {
+  background: var(--rso-accent);
+}
+
+.swatchRepeat {
+  background: var(--rso-accent-2);
+}
+
+.positive {
+  color: var(--rso-pos);
+}
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.neutral {
+  color: var(--rso-neutral);
+}
+
+/* План / факт */
+
+.planList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.planRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.planName {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.planPct {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  height: 8px;
+  overflow: hidden;
+  background: var(--rso-hover);
+  border-radius: 4px;
+}
+
+.bar {
+  display: block;
+  height: 100%;
+  background: var(--rso-accent);
+  border-radius: 4px;
+  transform-origin: left center;
+  animation: bar-grow 1.1s var(--rso-ease-out) 0.3s backwards;
+}
+
+.barDone {
+  background: var(--rso-pos);
+}
+
+.planMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.footnote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Структура выручки */
+
+.donutLayout {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+
+.donut {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.donutCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutValue {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.donutCaption {
+  font-size: 12px;
+  color: var(--rso-text-muted);
+}
+
+.sliceList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sliceItem {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.sliceName {
+  color: var(--rso-text-muted);
+}
+
+.sliceValue,
+.sliceShare {
+  font-variant-numeric: tabular-nums;
+}
+
+.sliceShare {
+  min-width: 56px;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Клиенты */
+
+.segments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.segmentHeads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.segmentHead {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 2px;
+}
+
+.segmentName {
+  font-size: 13px;
+  color: var(--rso-text-muted);
+}
+
+.segmentCount {
+  grid-column: 2;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.delta {
+  grid-column: 2;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.shareBar {
+  display: flex;
+  height: 24px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rso-on-accent);
+  border-radius: 6px;
+}
+
+.sharePrimary,
+.shareRepeat {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-basis: 0;
+  transition: flex-grow 0.6s var(--rso-ease-out);
+}
+
+.sharePrimary {
+  background: var(--rso-accent);
+}
+
+.shareRepeat {
+  justify-content: flex-end;
+  background: var(--rso-accent-2);
+}
+
+.segmentTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.segmentTable th,
+.segmentTable td {
+  padding: 8px 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid var(--rso-border);
+}
+
+.segmentTable thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rso-text-muted);
+}
+
+.segmentTable tbody th {
+  font-weight: 400;
+  text-align: left;
+  color: var(--rso-text-muted);
+}
+
+.segmentTable tbody tr:last-child th,
+.segmentTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (max-width: 519px) {
+  .chart {
+    height: 240px;
+  }
+
+  .donutLayout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .donut {
+    width: 200px;
+  }
+
+  .sliceList {
+    width: 100%;
+  }
+}
+
+/* Переходы drill-down по графикам */
+
+.clickableChart {
+  cursor: pointer;
+}
+
+.clickableChart :global(.recharts-pie-sector) {
+  transition: opacity 0.2s;
+}
+
+.clickableChart :global(.recharts-pie-sector):hover {
+  opacity: 0.85;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--rso-text-muted);
+}
+
+.legend .hint {
+  margin-left: auto;
+}
+
+.legendButton {
+  padding: 2px 6px;
+  margin: -2px -6px;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.legendButton:hover {
+  color: var(--rso-text);
+  background: var(--rso-hover);
+}
+
+/* Строка-кнопка: план, легенда структуры */
+.rowButton {
+  width: 100%;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  box-sizing: content-box;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.rowButton:hover:not(:disabled) {
+  background: var(--rso-hover);
+}
+
+.rowButton:disabled {
+  cursor: default;
+}
+
+.moreButton {
+  align-self: flex-start;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rso-accent);
+  background: transparent;
+  border: 1px solid var(--rso-accent);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.moreButton:hover {
+  background: var(--rso-accent-soft);
+}

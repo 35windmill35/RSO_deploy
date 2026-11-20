@@ -1,0 +1,173 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--rso-gap);
+}
+
+@media (max-width: 1279px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 899px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 16px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius);
+  box-shadow: var(--rso-shadow);
+  transition:
+    border-color 0.35s,
+    transform 0.35s var(--rso-ease-out),
+    box-shadow 0.35s;
+  /* Появление снизу с лёгкой «лесенкой», как в дашборде ДТП */
+  animation: card-in var(--rso-enter) var(--rso-ease-out) backwards;
+}
+
+.card:nth-child(2) {
+  animation-delay: 45ms;
+}
+.card:nth-child(3) {
+  animation-delay: 90ms;
+}
+.card:nth-child(4) {
+  animation-delay: 135ms;
+}
+.card:nth-child(5) {
+  animation-delay: 180ms;
+}
+.card:nth-child(6) {
+  animation-delay: 225ms;
+}
+.card:nth-child(7) {
+  animation-delay: 270ms;
+}
+.card:nth-child(8) {
+  animation-delay: 315ms;
+}
+.card:nth-child(9) {
+  animation-delay: 360ms;
+}
+.card:nth-child(10) {
+  animation-delay: 405ms;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover,
+.clickable:focus-visible {
+  border-color: var(--rso-accent);
+  transform: translateY(-2px);
+  box-shadow: var(--rso-shadow-lift);
+}
+
+.clickable:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--rso-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.value {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-height: 18px;
+  font-size: 12.5px;
+}
+
+.delta {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  animation: fade-in 0.5s ease-out 0.6s backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.positive {
+  color: var(--rso-pos);
+}
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.neutral {
+  color: var(--rso-neutral);
+}
+
+.note {
+  color: var(--rso-text-muted);
+  animation: fade-in 0.5s ease-out 0.6s backwards;
+}
+
+@media (max-width: 519px) {
+  .card {
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .value {
+    font-size: 19px;
+  }
+
+  .label,
+  .footer {
+    font-size: 12px;
+  }
+}
+
+/* Видно только экранному диктору */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

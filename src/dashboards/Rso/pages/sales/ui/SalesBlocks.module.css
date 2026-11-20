@@ -1,0 +1,481 @@
+/* Общие стили блоков вкладки «Продажи и виды услуг» */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Таблица под графиком внутри карточки — во всю ширину, без внутренних отступов */
+.tableBleed {
+  margin: 0 -20px -20px;
+}
+
+.footnote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+.positive {
+  color: var(--rso-pos);
+}
+
+.negative {
+  color: var(--rso-neg);
+}
+
+.neutral {
+  color: var(--rso-neutral);
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--rso-text-muted);
+}
+
+.actionButton {
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--rso-accent);
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.actionButton:hover:not(:disabled) {
+  border-color: var(--rso-accent);
+  background: var(--rso-accent-soft);
+}
+
+.actionButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.select {
+  max-width: 220px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--rso-text);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+}
+
+/* Динамика по отделам */
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 320px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    opacity 0.2s;
+}
+
+.legendItem:hover {
+  color: var(--rso-text);
+}
+
+.legendHidden {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+.swatch {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.clickableChart :global(.recharts-bar-rectangle) {
+  cursor: pointer;
+}
+
+/* Структура оборота */
+
+.structureRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.structureHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.structureName {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--rso-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.structureValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.structureCompany .structureName {
+  font-weight: 600;
+  color: var(--rso-text);
+}
+
+.legendStatic {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Виды услуг: кольцо + список */
+
+.donutLayout {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+}
+
+.donut {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.donutCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutValue {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.donutCaption {
+  font-size: 12px;
+  color: var(--rso-text-muted);
+}
+
+.sliceList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sliceItem {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 13px;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--rso-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sliceItem:hover {
+  background: var(--rso-hover);
+}
+
+.sliceName {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--rso-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sliceValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.sliceShare {
+  min-width: 52px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--rso-neg);
+  background: color-mix(in srgb, var(--rso-neg) 8%, transparent);
+  border-radius: var(--rso-radius-sm);
+}
+
+.loadYear {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--rso-text-muted);
+}
+
+/* Загрузка ремзоны */
+
+.capacity {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.capacityRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.capacityHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.capacityLabel {
+  color: var(--rso-text-muted);
+}
+
+.capacityValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.capacityPct {
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+.capacityDelta {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.capacityTrack {
+  position: relative;
+  height: 10px;
+  overflow: hidden;
+  background: var(--rso-hover);
+  border-radius: 5px;
+}
+
+.capacityFill {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+  transform-origin: left center;
+  animation: bar-grow 0.9s var(--rso-ease-out) 0.15s backwards;
+}
+
+/* Значение больше доступного — штриховка у правого края */
+.capacityOverflow::after {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 12px;
+  content: "";
+  background: repeating-linear-gradient(45deg, transparent 0 3px, var(--rso-card) 3px 5px);
+}
+
+.capacityPosts {
+  font-size: 13px;
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Склад */
+
+/* «Посмотреть все группы» внизу карточки — открывает панель детализации */
+.detailsFooter {
+  margin: 0 -20px -20px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--rso-border);
+}
+
+.shareCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.shareTrack {
+  width: 48px;
+  height: 6px;
+  overflow: hidden;
+  background: var(--rso-hover);
+  border-radius: 3px;
+}
+
+.shareFill {
+  display: block;
+  height: 100%;
+  background: var(--rso-accent);
+}
+
+/* Планшет и мобильный: графики ниже (ТЗ §5.2) */
+@media (max-width: 899px) {
+  .chart {
+    height: 260px;
+  }
+}
+
+@media (max-width: 519px) {
+  .detailsFooter {
+    margin: 0 -14px -14px;
+  }
+
+  .donutLayout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .donut {
+    width: 180px;
+  }
+
+  .sliceList {
+    width: 100%;
+  }
+
+  .tableBleed {
+    margin: 0 -14px -14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capacityFill {
+    animation: none;
+  }
+}
+
+/* Ячейки итоговой строки таблицы */
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.fill {
+  height: 100%;
+}
+
+/* Прошлый период не загрузился: дельты ремзоны и склада не показаны */
+.prevError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--rso-text-muted);
+  background: var(--rso-card);
+  border: 1px solid var(--rso-border);
+  border-radius: var(--rso-radius-sm);
+}
+
+/* «Прочие отделы» в тренде — без перехода */
+.staticBar :global(.recharts-bar-rectangle) {
+  cursor: default;
+}
+
+/* Видно только экранному диктору и клавиатуре */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.srOnly:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
